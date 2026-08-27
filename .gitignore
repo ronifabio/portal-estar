@@ -1,0 +1,19 @@
+# Dependências
+node_modules/
+
+# Artefatos de build
+dist/
+build/
+.angular/
+
+# Ambiente — credenciais nunca entram no repositório
+.env
+.env.*
+!.env.example
+
+# Cobertura e logs
+coverage/
+*.log
+
+# IDE / SO
+.DS_Store
