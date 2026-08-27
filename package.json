@@ -1,0 +1,13 @@
+{
+  "name": "portal-estar",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portal EstaR — agregador de apps de estacionamento rotativo com carteira de saldo. Orquestração dos apps do monorepo (apps/api e apps/web).",
+  "scripts": {
+    "api": "npm run start:dev --prefix apps/api",
+    "web": "npm start --prefix apps/web",
+    "test": "npm run test --prefix apps/api && npm test --prefix apps/web -- --watch=false",
+    "test:e2e": "npm run test:e2e --prefix apps/api",
+    "lint": "npm run lint --prefix apps/api && npm run lint --prefix apps/web"
+  }
+}
