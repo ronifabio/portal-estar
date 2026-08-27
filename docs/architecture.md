@@ -1,7 +1,7 @@
 # 🛠️ Architecture / Software Design Document
 
 **Projeto:** Portal EstaR
-**Versão:** 1.0.0
+**Versão:** 1.1.0
 **Última atualização:** 2026-08-27
 
 > 🤖 **O `prd.md` responde _o quê_ o produto faz. Este responde _onde as coisas
@@ -30,8 +30,9 @@
 > Definição **estrita**: nenhuma dependência entra sem aparecer aqui. Esta
 > seção e o `package.json` contam a mesma história, ou o projeto já se perdeu.
 
-- **Backend:** NestJS 11 + Prisma ORM (última estável, travada no `/utf-setup`) + PostgreSQL 16 — fixados pela ficha da disciplina.
-- **Frontend:** Angular 21 (última estável, travada no `/utf-setup`), consumindo a API.
+- **Backend:** NestJS 12 (travado no `/utf-setup`) + Prisma ORM (última estável — entra na primeira Issue que tocar banco) + PostgreSQL 16 — fixados pela ficha da disciplina.
+- **Frontend:** Angular 22 (travado no `/utf-setup`), consumindo a API.
+- **Runtime:** Node.js 24 (≥ 24.15, exigência do Angular CLI) — na máquina local, via `nvm use 24`.
 - **Padrões de código do frontend (Angular):**
   - Componentes standalone (padrão atual — não se escreve `standalone: true`);
   - Signals para estado;
@@ -44,11 +45,14 @@
 
   | App | Ferramenta | Comandos exatos |
   | :--- | :--- | :--- |
-  | `apps/api` | Jest (padrão NestJS) + Supertest (e2e) | `npm run test` · `npm run test:e2e` · `npm run lint` |
+  | `apps/api` | Vitest (padrão do scaffold NestJS 12) + Supertest (e2e) | `npm run test` · `npm run test:e2e` · `npm run lint` |
   | `apps/web` | Vitest (padrão do Angular CLI atual) | `npm test` · `npm run lint` |
 
-  Lint em ambos com ESLint (no Angular, via `angular-eslint`). São estes os
-  comandos que o CI e os revisores executam.
+  Lint: **oxlint** na API (padrão do scaffold NestJS 12) e **ESLint** no web
+  (via `angular-eslint`). Critério ratificado: **o padrão de cada framework**,
+  como veio do gerador oficial. São estes os comandos que o CI e os revisores
+  executam — na raiz, `npm test`, `npm run test:e2e` e `npm run lint` rodam os
+  dois apps.
 
 ### 🧱 2.1. Backend — regras estruturais
 
@@ -109,6 +113,16 @@ Swagger/OpenAPI via `@nestjs/swagger`, servido em **`/docs`** pela própria API
 **Regras de dependência:** no `api`, um módulo de domínio só usa outro pelo que
 o module exporta explicitamente. No `web`, `features/` pode usar `core/` e
 `shared/`; `core/` e `shared/` **nunca** importam de `features/`.
+
+**Scripts da raiz** (o `package.json` da raiz só orquestra — delega para o app):
+
+| Script | Faz |
+| :--- | :--- |
+| `npm run api` | sobe a API em modo dev (`start:dev` em `apps/api`) |
+| `npm run web` | sobe o front em modo dev (`start` em `apps/web`) |
+| `npm test` | suíte dos dois apps (api e web, uma vez, sem watch) |
+| `npm run test:e2e` | testes e2e da API |
+| `npm run lint` | lint dos dois apps |
 
 ---
 
@@ -252,6 +266,7 @@ erDiagram
 | Data | Versão | O que mudou |
 | :--- | :----- | :---------- |
 | 2026-08-27 | 1.0.0 | Versão inicial via `/utf-architecture` |
+| 2026-08-27 | 1.1.0 | Ratificação pós-setup: Angular 22 e NestJS 12 (versões reais dos geradores), Vitest + oxlint na API (novo padrão do scaffold Nest), scripts da raiz e exigência de Node ≥ 24.15 |
 
 ---
 
